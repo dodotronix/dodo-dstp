@@ -267,7 +267,6 @@ function Vhdl_port()
         let s:vport_name = s:vport_name . " : in std_logic;" 
     endif
     exe "normal! a" . s:vport_name ."\n" 
-    echo s:flag
 endfunction
 
 function Vhdl_signal(updown)
@@ -350,20 +349,22 @@ endfunction
 function Vhdl_portmap()
     let s:input_data = split(@+, "\n")
     let s:portmap_id = getline('.') 
-    let s:portmap_name = matchlist(s:input_data, "^\\_s*component\\s\\+\\(\\w\\+\\).*")
+    let s:portmap_name = matchlist(s:input_data, "\\c^\\s*component\\_s\\+\\(\\w\\+\\).*")
+    
     exe "normal! S"
+
     " TODO match port and generic part and then iterate through each of them
 
     let s:portmap = s:portmap_id . ": " . s:portmap_name[1] . "\nport map(" 
 
     for i in s:input_data[1:len(s:input_data)-1]
 
-        let s:port_vmap = matchlist(i, "^\\s*\\(port(\\|\\s*\\)\\s*\\([a-zA-Z0-9_]\\+\\)"
+        let s:port_vmap = matchlist(i, "\\c^\\s*\\(port(\\|\\s*\\)\\s*\\([a-zA-Z0-9_]\\+\\)"
                                     \."\\s*:\\s*\\_a\\+\\s\\+"
                                     \."std_logic_vector\\+"
                                     \."\\(([a-zA-Z0-9 ]\\+)\\).*") 
 
-        let s:port_lmap = matchlist(i, "^\\s*\\(port(\\|\\s*\\)\\s*\\([a-zA-Z0-9_]\\+\\)"
+        let s:port_lmap = matchlist(i, "\\c^\\s*\\(port(\\|\\s*\\)\\s*\\([a-zA-Z0-9_]\\+\\)"
                                     \."\\s*:\\s*\\(\\_a\\+\\)"
                                     \."\\s\\+std_logic\\s*.*") 
 
